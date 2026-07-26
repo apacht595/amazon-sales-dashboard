@@ -43,6 +43,9 @@ requires-dist = [
     { name = "streamlit", specifier = ">=1.60.0" },
 ]
 
+[package.metadata.requires-dev]
+dev = []
+
 [[package]]
 name = "anyio"
 version = "4.14.2"
