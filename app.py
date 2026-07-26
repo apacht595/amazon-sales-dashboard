@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import streamlit as st
 
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
@@ -39,6 +40,10 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return cleaned
 
 
+st.set_page_config(page_title="Amazon Sales Dashboard", page_icon="📊")
+st.title("Amazon Sales Dashboard")
+st.caption("This dashboard will summarize Amazon sales trends and product performance once the full view is built.")
+
 data_path = Path(__file__).resolve().parent / "data" / "raw" / "amazon.csv"
 raw_df = pd.read_csv(data_path)
 cleaned_df = clean_data(raw_df)
@@ -47,13 +52,7 @@ before_rows = len(raw_df)
 after_rows = len(cleaned_df)
 dropped_rows = before_rows - after_rows
 
-print(f"Rows before cleaning: {before_rows}")
-print(f"Rows after cleaning: {after_rows}")
-print(f"Rows dropped: {dropped_rows}")
-print("\nPreview of first 5 cleaned rows:")
-print(
-    cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]]
-    .head(5)
-    .to_string(index=False)
-)
+
+st.write("Preview of the cleaned data:")
+st.dataframe(cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]].head(10))
 
