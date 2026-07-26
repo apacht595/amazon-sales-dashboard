@@ -1,5 +1,28 @@
 # amazon-sales-dashboard
 
+## Installation and setup
+
+1. Clone the repository:
+   ```bash
+   git clone <https://github.com/apacht595/amazon-sales-dashboard.git>
+   cd amazon-sales-dashboard
+   ```
+
+2. Download the dataset from the Amazon Sales Dataset on Kaggle at this address, https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset, and place it at data/raw/amazon.csv. This file is not included in the repository.
+
+3. Install dependencies with uv:
+   ```bash
+   uv sync
+   ```
+   If the environment is missing packages, you can add them explicitly with:
+   ```bash
+   uv add pandas plotly streamlit
+   ```
+4. Launch the dashboard:
+   ```bash
+   uv run streamlit run app.py
+   ```
+
 ## Data cleaning approach
 
 The dashboard uses a `clean_data` function in [app.py](app.py) to prepare the Amazon sales CSV before visualization.
