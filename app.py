@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 
 
@@ -37,10 +39,21 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return cleaned
 
 
-def main():
-    print("Hello from amazon-sales-dashboard!")
+data_path = Path(__file__).resolve().parent / "data" / "raw" / "amazon.csv"
+raw_df = pd.read_csv(data_path)
+cleaned_df = clean_data(raw_df)
 
+before_rows = len(raw_df)
+after_rows = len(cleaned_df)
+dropped_rows = before_rows - after_rows
 
-if __name__ == "__main__":
-    main()
+print(f"Rows before cleaning: {before_rows}")
+print(f"Rows after cleaning: {after_rows}")
+print(f"Rows dropped: {dropped_rows}")
+print("\nPreview of first 5 cleaned rows:")
+print(
+    cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]]
+    .head(5)
+    .to_string(index=False)
+)
 
