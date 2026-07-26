@@ -66,30 +66,39 @@ category_counts = (
     .reset_index(name="product_count")
 )
 category_counts.columns = ["category", "product_count"]
+category_counts = category_counts.sort_values("product_count", ascending=False).reset_index(drop=True)
 
 category_ratings = (
     cleaned_df.assign(category=top_level_categories)
     .groupby("category", as_index=False)["rating"]
     .mean()
 )
+category_ratings = category_ratings.merge(
+    category_counts[["category", "product_count"]],
+    on="category",
+    how="left",
+)
+category_ratings = category_ratings[category_ratings["product_count"] > 30].sort_values(
+    "rating", ascending=False
+).reset_index(drop=True)
 
 chart1 = px.bar(
     category_counts.head(10),
-    x="product_count",
-    y="category",
-    orientation="h",
+    x="category",
+    y="product_count",
     title="Product Count by Category",
 )
-chart1.update_layout(yaxis={'categoryarray': category_counts['category'].tolist()})
+chart1.update_layout(xaxis_title="Category", yaxis_title="Product Count")
+chart1.update_traces(text=category_counts["product_count"], textposition="outside")
 
 chart2 = px.bar(
-    category_ratings.sort_values("rating", ascending=False).head(10),
-    x="rating",
-    y="category",
-    orientation="h",
+    category_ratings.head(10),
+    x="category",
+    y="rating",
     title="Average Rating by Category",
 )
-chart2.update_layout(yaxis={'categoryarray': category_ratings.sort_values('rating', ascending=False)['category'].tolist()})
+chart2.update_layout(xaxis_title="Category", yaxis_title="Average Rating")
+chart2.update_traces(text=category_ratings["rating"].round(2), textposition="outside")
 
 chart3 = px.scatter(
     cleaned_df,
@@ -99,6 +108,9 @@ chart3 = px.scatter(
     hover_name="product_name",
 )
 chart3.update_traces(marker=dict(size=8, opacity=0.7))
+
+st.write("Preview of the cleaned data:")
+st.dataframe(cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]].head(5))
 
 st.plotly_chart(chart1, use_container_width=True)
 st.write(
@@ -117,6 +129,3 @@ st.write(
     "This scatter plot compares each product's actual price to its discounted price."
     " Points near the diagonal suggest smaller discounts, while points below it indicate deeper markdowns."
 )
-
-st.write("Preview of the cleaned data:")
-st.dataframe(cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]].head(5))
