@@ -52,7 +52,10 @@ before_rows = len(raw_df)
 after_rows = len(cleaned_df)
 dropped_rows = before_rows - after_rows
 
+col1, col2, col3 = st.columns(3) #splits the page into 3 side by side sections
+col1.metric("Total Products", f"{after_rows}")#uses the row count of the cleaned dataframe to display the total number of products
+col2.metric("Average Rating", f"{cleaned_df['rating'].mean():.2f}")
+col3.metric("Average Discount %", f"{cleaned_df['discount_percentage'].mean():.2f}%")
 
 st.write("Preview of the cleaned data:")
-st.dataframe(cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]].head(10))
-
+st.dataframe(cleaned_df[["discounted_price", "actual_price", "discount_percentage", "rating", "rating_count"]].head(5))
